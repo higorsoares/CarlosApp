@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack'; // Importação necessária para navegação
-import { Icon } from 'react-native-elements'; // Adicionando ícone
+import { useRouter } from 'expo-router';
+import { Icon } from 'react-native-elements';
 
 const cocaImage = require('C:\\Users\\Igor\\app-carlos\\assets\\img\\coca.png');
 const salgadoImage = require('C:\\Users\\Igor\\app-carlos\\assets\\img\\cheetos.png');
@@ -31,24 +31,17 @@ const products = [
   },
 ];
 
-type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-  Home: undefined;
-  Profile: undefined;
-};
+const HomeScreen = () => {
+  const router = useRouter();
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
-
-const HomeScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/')}>
           <Icon name='arrow-back' type='material' color='#FFF' />
           <Text style={styles.logoutText}>Sair</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity style={styles.profileButton} onPress={() => router.push('/ProfileScreen')}>
           <Text style={styles.profileButtonText}>Perfil</Text>
           <Icon name='account-circle' type='material' color='#FFF' />
         </TouchableOpacity>

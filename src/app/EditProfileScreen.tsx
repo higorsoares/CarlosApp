@@ -1,37 +1,42 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
 
-type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-};
+const EditProfileScreen: React.FC = () => {
+  const router = useRouter();
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
-
-const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Email inválido').required('Email é obrigatório'),
-    password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres').required('Senha é obrigatória'),
+    username: Yup.string().required('Nome é obrigatório'),
+    email: Yup.string()
+      .trim()
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+        'Email inválido'
+      )
+      .required('Email é obrigatório'),
   });
 
-  const handleRegister = async (values: { email: string; password: string }) => {
+  const handleSave = async (values: { username: string; email: string }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Cadastrar:', values.email, values.password);
-    Alert.alert('Sucesso', 'Conta cadastrada com sucesso');
+    Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
+    router.replace('/ProfileScreen'); // Navegar de volta para a tela de Perfil
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cadastrar Conta</Text>
-
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Icon name='arrow-back' type='material' color='#FFF' />
+        <Text style={styles.backButtonText}>Voltar</Text>
+      </TouchableOpacity>
+      <Text style={styles.title}>Editar Perfil</Text>
+      
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ username: '', email: '' }}
         validationSchema={validationSchema}
-        onSubmit={handleRegister}
+        onSubmit={handleSave}
       >
         {({
           handleChange,
@@ -43,6 +48,19 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
           isSubmitting,
         }) => (
           <View style={styles.formContainer}>
+            <Input
+              placeholder="Nome"
+              placeholderTextColor="#888"
+              onChangeText={handleChange('username')}
+              onBlur={handleBlur('username')}
+              value={values.username}
+              leftIcon={<Icon name='person' type='material' color='#888' />}
+              inputStyle={{ color: '#000' }}
+              inputContainerStyle={styles.inputContainer}
+              containerStyle={styles.inputWrapper}
+            />
+            {touched.username && errors.username && <Text style={styles.error}>{errors.username}</Text>}
+            
             <Input
               placeholder="Email"
               placeholderTextColor="#888"
@@ -56,34 +74,13 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               containerStyle={styles.inputWrapper}
             />
             {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
-
-            <Input
-              placeholder="Senha"
-              placeholderTextColor="#888"
-              secureTextEntry
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-              leftIcon={<Icon name='lock' type='material' color='#888' />}
-              inputStyle={{ color: '#000' }}
-              inputContainerStyle={styles.inputContainer}
-              containerStyle={styles.inputWrapper}
-            />
-            {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
-
+            
             <TouchableOpacity style={styles.button} onPress={handleSubmit as any} disabled={isSubmitting}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
+              <Text style={styles.buttonText}>Salvar</Text>
             </TouchableOpacity>
           </View>
         )}
       </Formik>
-
-      <View style={styles.registerContainer}>
-        <Text style={styles.registerText}>Já tem uma conta?</Text>
-        <Text style={styles.registerLink} onPress={() => navigation.navigate('Login')}>
-          Faça login
-        </Text>
-      </View>
     </View>
   );
 };
@@ -95,6 +92,18 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 40,
+    left: 20,
+  },
+  backButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    marginLeft: 5,
   },
   title: {
     textAlign: 'center',
@@ -137,21 +146,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 18,
   },
-  registerContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  registerText: {
-    textAlign: 'center',
-    fontSize: 20,
-    color: 'white',
-  },
-  registerLink: {
-    textAlign: 'center',
-    fontSize: 20,
-    color: 'white',
-    textDecorationLine: 'underline',
-  },
 });
 
-export default RegisterScreen;
+export default EditProfileScreen;

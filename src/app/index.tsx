@@ -1,19 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
 
-type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-  Home: undefined;
-};
+const index: React.FC = () => {
+  const router = useRouter();
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
-
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Email inválido').required('Email é obrigatório'),
     password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres').required('Senha é obrigatória'),
@@ -23,7 +17,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     if (values.email.trim() === 'teste@teste.com' && values.password.trim() === '123456') {
       Alert.alert('Sucesso', 'Login realizado com sucesso');
-      navigation.navigate('Home'); // Navegar para a tela Home
+      router.push('/HomeScreen'); // Navegar para a tela Home
     } else {
       Alert.alert('Erro', 'Email ou senha incorreto');
     }
@@ -85,7 +79,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
       <View style={styles.registerContainer}>
         <Text style={styles.registerText}>Não possui conta?</Text>
-        <Text style={styles.registerLink} onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.registerLink} onPress={() => router.push('/RegisterScreen')}>
           Clique aqui para se cadastrar
         </Text>
       </View>
@@ -159,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default index;

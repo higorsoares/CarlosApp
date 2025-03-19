@@ -1,25 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
+
 
 const userProfileImage = require('../../assets/profile/perfil.png');
 
-type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-  Home: undefined;
-  Profile: undefined;
-  EditProfile: undefined;
-};
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
+const ProfileScreen: React.FC = () => {
+  const router = useRouter();
 
-const ProfileScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/HomeScreen')}>
           <Icon name='arrow-back' type='material' color='#FFF' />
           <Text style={styles.backButtonText}>Voltar</Text>
         </TouchableOpacity>
@@ -29,7 +23,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
         <Text style={styles.userName}>Nome do Usuário</Text>
         <Text style={styles.userEmail}>usuario@example.com</Text>
       </View>
-      <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile')}>
+      <TouchableOpacity style={styles.editButton} onPress={() => router.push('/EditProfileScreen')}>
         <Text style={styles.editButtonText}>Editar Perfil</Text>
         <Icon name='edit' type='material' color='#FFF' />
       </TouchableOpacity>
