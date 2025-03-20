@@ -37,7 +37,10 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/')}>
+        <TouchableOpacity style={styles.backButton} onPress={() => { 
+          router.dismissAll();
+          router.replace('/');
+        }}>
           <Icon name='arrow-back' type='material' color='#FFF' />
           <Text style={styles.logoutText}>Sair</Text>
         </TouchableOpacity>

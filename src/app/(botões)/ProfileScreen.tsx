@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
 
 
-const userProfileImage = require('../../assets/profile/perfil.png');
+const userProfileImage = require('../../../assets/profile/perfil.png');
 
 
 const ProfileScreen: React.FC = () => {

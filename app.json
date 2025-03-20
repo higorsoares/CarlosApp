@@ -3,6 +3,7 @@
     "name": "app-carlos",
     "slug": "app-carlos",
     "version": "1.0.0",
+    "scheme": "AppLoja",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",

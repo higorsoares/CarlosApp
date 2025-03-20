@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
 
-const index: React.FC = () => {
+const Login: React.FC = () => {
   const router = useRouter();
 
   const validationSchema = Yup.object().shape({
@@ -16,7 +16,7 @@ const index: React.FC = () => {
   const handleLogin = async (values: { email: string; password: string }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     if (values.email.trim() === 'teste@teste.com' && values.password.trim() === '123456') {
-      Alert.alert('Sucesso', 'Login realizado com sucesso');
+     
       router.push('/HomeScreen'); // Navegar para a tela Home
     } else {
       Alert.alert('Erro', 'Email ou senha incorreto');
@@ -153,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default index;
+export default Login;
