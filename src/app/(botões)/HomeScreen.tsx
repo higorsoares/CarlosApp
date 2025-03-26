@@ -3,9 +3,9 @@ import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
 
-const cocaImage = require('C:\\Users\\Igor\\app-carlos\\assets\\img\\coca.png');
-const salgadoImage = require('C:\\Users\\Igor\\app-carlos\\assets\\img\\cheetos.png');
-const foneImage = require('C:\\Users\\Igor\\app-carlos\\assets\\img\\fone.png');
+const cocaImage = require('../../../assets\\img\\coca.png');
+const salgadoImage = require('../../../assets\\img\\cheetos.png');
+const foneImage = require('../../../assets\\img\\fone.png');
 
 const products = [
   {
@@ -50,18 +50,31 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
       <Text style={styles.title}>Produtos</Text>
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.productContainer}>
-            <Image source={item.image} style={styles.productImage} />
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>{item.price}</Text>
-            <Text style={styles.productDescription}>{item.description}</Text>
-          </TouchableOpacity>
-        )}
-      />
+    <FlatList
+  data={products}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      style={styles.productContainer}
+      onPress={() =>
+        router.push({
+          pathname: '/ProductDetails',
+          params: {
+            name: item.name,
+            price: item.price,
+            description: item.description,
+            image: Image.resolveAssetSource(item.image).uri,
+          },
+        })
+      }
+    >
+      <Image source={item.image} style={styles.productImage} />
+      <Text style={styles.productName}>{item.name}</Text>
+      <Text style={styles.productPrice}>{item.price}</Text>
+      
+    </TouchableOpacity>
+  )}
+/>
     </View>
   );
 };

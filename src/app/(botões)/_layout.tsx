@@ -21,6 +21,7 @@ export function Layout() {
               color={btn.focused ? 'white' : 'gray'} 
             />
           ),
+          headerShown: false, // Remove o cabeçalho com o nome da tela
         }}
       />
       <Tabs.Screen 
@@ -34,6 +35,7 @@ export function Layout() {
               color={btn.focused ? 'white' : 'gray'} 
             />
           ),
+          headerShown: false, // Remove o cabeçalho com o nome da tela
         }}
       />
     </Tabs>
