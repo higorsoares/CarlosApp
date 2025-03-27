@@ -1,22 +1,37 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
+import Toast from 'react-native-toast-message';
 
 const RegisterScreen: React.FC = () => {
   const router = useRouter();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Email inválido').required('Email é obrigatório'),
-    password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres').required('Senha é obrigatória'),
+    password: Yup.string()
+      .min(6, 'A senha deve ter pelo menos 6 caracteres')
+      .required('Senha é obrigatória'),
   });
 
   const handleRegister = async (values: { email: string; password: string }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log('Cadastrar:', values.email, values.password);
-    Alert.alert('Sucesso', 'Conta cadastrada com sucesso');
+
+    Toast.show({
+      type: 'success',
+      text1: 'Cadastro realizado!',
+      text2: 'Sua conta foi cadastrada com sucesso.',
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+    });
+    setTimeout(() => {
+      router.push('/');
+    }, 3500);
+
   };
 
   return (
@@ -28,15 +43,7 @@ const RegisterScreen: React.FC = () => {
         validationSchema={validationSchema}
         onSubmit={handleRegister}
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          isSubmitting,
-        }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
           <View style={styles.formContainer}>
             <Input
               placeholder="Email"
@@ -45,7 +52,7 @@ const RegisterScreen: React.FC = () => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
-              leftIcon={<Icon name='email' type='material' color='#888' />}
+              leftIcon={<Icon name="email" type="material" color="#888" />}
               inputStyle={{ color: '#000' }}
               inputContainerStyle={styles.inputContainer}
               containerStyle={styles.inputWrapper}
@@ -59,16 +66,17 @@ const RegisterScreen: React.FC = () => {
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.password}
-              leftIcon={<Icon name='lock' type='material' color='#888' />}
+              leftIcon={<Icon name="lock" type="material" color="#888" />}
               inputStyle={{ color: '#000' }}
               inputContainerStyle={styles.inputContainer}
               containerStyle={styles.inputWrapper}
             />
             {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit as any} disabled={isSubmitting}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
+            <TouchableOpacity style={styles.button} onPress={() => handleSubmit()} disabled={isSubmitting}>
+                <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>
+
           </View>
         )}
       </Formik>
@@ -79,6 +87,8 @@ const RegisterScreen: React.FC = () => {
           Faça login
         </Text>
       </View>
+
+      <Toast />
     </View>
   );
 };
