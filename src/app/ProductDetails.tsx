@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Alert, Share } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,17 +15,14 @@ const ProductDetails = () => {
   const params = useLocalSearchParams<ProductDetailsParams>();
   const router = useRouter();
 
-  // Estado para controlar os campos do formulário
   const [userName, setUserName] = useState('');
   const [userCpf, setUserCpf] = useState('');
   const [userCep, setUserCep] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPhone, setUserPhone] = useState('');
 
-  // Referência para controlar o Modalize
   const modalizeRef = useRef<Modalize>(null);
 
-  // Garante que os parâmetros são strings válidas
   const name = typeof params.name === 'string' ? params.name : '';
   const price = typeof params.price === 'string' ? params.price : '';
   const description = typeof params.description === 'string' ? params.description : '';
@@ -45,40 +42,32 @@ const ProductDetails = () => {
     );
   }
 
-  // Função para abrir o modal
   const openModal = () => {
-    modalizeRef.current?.open(); // Usando o ref para abrir o modal
+    modalizeRef.current?.open();
   };
 
-  // Função para fechar o modal
   const closeModal = () => {
-    modalizeRef.current?.close(); // Usando o ref para fechar o modal
+    modalizeRef.current?.close();
   };
 
-  // Função para processar a compra
   const handleSubmit = () => {
     if (!userName || !userCpf || !userCep || !userEmail || !userPhone) {
       Alert.alert('Erro', 'Todos os campos precisam ser preenchidos.');
       return;
     }
 
-    // Exibe o alerta de confirmação de compra
     Alert.alert(
       'Confirmar Compra',
       `Você deseja confirmar a compra de ${name} por ${price}?`,
       [
         {
           text: 'Cancelar',
-          onPress: () => {
-            // Apenas fecha o modal sem fazer nada
-            closeModal();
-          },
+          onPress: closeModal,
           style: 'cancel',
         },
         {
           text: 'Confirmar',
           onPress: () => {
-            // Simula a confirmação da compra
             Alert.alert(
               'Compra Confirmada',
               `Compra de ${name} realizada com sucesso!\n\nValor: ${price}`,
@@ -92,34 +81,45 @@ const ProductDetails = () => {
     );
   };
 
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Confira este produto incrível!\n\n${name}\nPreço: ${price}\n\nDescrição: ${description}`,
+      });
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível compartilhar o produto.');
+    }
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
-        {/* Botão de voltar */}
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Text style={styles.backText}>⬅ Voltar</Text>
         </TouchableOpacity>
 
-        {/* Imagem do produto */}
         <Image source={{ uri: image }} style={styles.image} />
         
-        {/* Informações do produto */}
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>{price}</Text>
 
-        {/* Espaço extra entre preço e descrição */}
         <View style={{ marginTop: 20 }}>
           <Text style={styles.descriptionTitle}>Descrição</Text>
         </View>
         
         <Text style={styles.description}>{description}</Text>
 
-        {/* Botão de compra */}
-        <TouchableOpacity style={styles.buyButton} onPress={openModal}>
-          <Text style={styles.buyButtonText}>Comprar Agora</Text>
-        </TouchableOpacity>
+        {/* Botões lado a lado */}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.buyButton} onPress={openModal}>
+            <Text style={styles.buyButtonText}>🛒 Comprar Agora</Text>
+          </TouchableOpacity>
 
-        {/* Modal */}
+          <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+            <Text style={styles.shareButtonText}>📤 Compartilhar</Text>
+          </TouchableOpacity>
+        </View>
+
         <Modalize ref={modalizeRef} adjustToContentHeight>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Informações de Compra</Text>
@@ -235,16 +235,35 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
   },
-  buyButton: {
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
     marginTop: 20,
-    backgroundColor: '#4B0082', // Verde chamativo
+    width: '100%',
+  },
+  buyButton: {
+    flex: 1,
+    backgroundColor: '#4B0082',
     paddingVertical: 12,
-    paddingHorizontal: 40,
     borderRadius: 8,
+    alignItems: 'center',
   },
   buyButtonText: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  shareButton: {
+    flex: 1,
+    backgroundColor: '#6A0DAD',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  shareButtonText: {
+    color: '#FFF',
+    fontSize: 16,
     fontWeight: 'bold',
   },
   modalContainer: {
