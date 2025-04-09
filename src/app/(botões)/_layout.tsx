@@ -5,9 +5,9 @@ export function Layout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarStyle: { backgroundColor: '#4B0082' }, // Cor de fundo
-        tabBarActiveTintColor: 'white', // Ícone ativo
-        tabBarInactiveTintColor: 'gray', // Ícone inativo
+        tabBarStyle: { backgroundColor: '#4B0082' },
+        tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: 'gray',
       }}
     >
       <Tabs.Screen 
@@ -16,12 +16,26 @@ export function Layout() {
           tabBarLabel: "Início",
           tabBarIcon: (btn) => (
             <Ionicons 
-              name={btn.focused ? "home" : "home-outline"} // Ícones dinâmicos
+              name={btn.focused ? "home" : "home-outline"} 
               size={20} 
               color={btn.focused ? 'white' : 'gray'} 
             />
           ),
-          headerShown: false, // Remove o cabeçalho com o nome da tela
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen 
+        name="CartScreen" 
+        options={{
+          tabBarLabel: "Carrinho",
+          tabBarIcon: (btn) => (
+            <Ionicons 
+              name={btn.focused ? "cart" : "cart-outline"}
+              size={20}
+              color={btn.focused ? 'white' : 'gray'}
+            />
+          ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen 
@@ -30,15 +44,16 @@ export function Layout() {
           tabBarLabel: "Perfil",
           tabBarIcon: (btn) => (
             <Ionicons 
-              name={btn.focused ? "person" : "person-outline"} // Ícones dinâmicos
+              name={btn.focused ? "person" : "person-outline"} 
               size={20} 
               color={btn.focused ? 'white' : 'gray'} 
             />
           ),
-          headerShown: false, // Remove o cabeçalho com o nome da tela
+          headerShown: false,
         }}
       />
     </Tabs>
   );
 }
+
 export default Layout;

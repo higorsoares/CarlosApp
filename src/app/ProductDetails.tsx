@@ -1,25 +1,31 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Alert, Share } from 'react-native';
+import React, { useRef } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+  Share,
+  ToastAndroid,
+  Platform,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ProductDetailsParams = {
   name?: string;
   price?: string;
   description?: string;
   image?: string;
+  id?: string;
 };
 
 const ProductDetails = () => {
   const params = useLocalSearchParams<ProductDetailsParams>();
   const router = useRouter();
-
-  const [userName, setUserName] = useState('');
-  const [userCpf, setUserCpf] = useState('');
-  const [userCep, setUserCep] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userPhone, setUserPhone] = useState('');
 
   const modalizeRef = useRef<Modalize>(null);
 
@@ -27,6 +33,7 @@ const ProductDetails = () => {
   const price = typeof params.price === 'string' ? params.price : '';
   const description = typeof params.description === 'string' ? params.description : '';
   const image = typeof params.image === 'string' ? params.image : '';
+  const id = typeof params.id === 'string' ? params.id : '';
 
   if (!name || !price || !description || !image) {
     return (
@@ -50,35 +57,24 @@ const ProductDetails = () => {
     modalizeRef.current?.close();
   };
 
-  const handleSubmit = () => {
-    if (!userName || !userCpf || !userCep || !userEmail || !userPhone) {
-      Alert.alert('Erro', 'Todos os campos precisam ser preenchidos.');
-      return;
-    }
+  const handleAddToCart = async () => {
+    const product = { id, name, price, image };
 
-    Alert.alert(
-      'Confirmar Compra',
-      `Você deseja confirmar a compra de ${name} por ${price}?`,
-      [
-        {
-          text: 'Cancelar',
-          onPress: closeModal,
-          style: 'cancel',
-        },
-        {
-          text: 'Confirmar',
-          onPress: () => {
-            Alert.alert(
-              'Compra Confirmada',
-              `Compra de ${name} realizada com sucesso!\n\nValor: ${price}`,
-              [{ text: 'OK', onPress: closeModal }],
-              { cancelable: false }
-            );
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    try {
+      const storedCart = await AsyncStorage.getItem('cartItems');
+      const cart = storedCart ? JSON.parse(storedCart) : [];
+
+      const updatedCart = [...cart, product];
+      await AsyncStorage.setItem('cartItems', JSON.stringify(updatedCart));
+
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Produto adicionado ao carrinho! 🛒', ToastAndroid.SHORT);
+      } else {
+        Alert.alert('Adicionado!', 'Produto adicionado ao carrinho! 🛒');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível adicionar ao carrinho.');
+    }
   };
 
   const handleShare = async () => {
@@ -99,20 +95,19 @@ const ProductDetails = () => {
         </TouchableOpacity>
 
         <Image source={{ uri: image }} style={styles.image} />
-        
+
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>{price}</Text>
 
         <View style={{ marginTop: 20 }}>
           <Text style={styles.descriptionTitle}>Descrição</Text>
         </View>
-        
+
         <Text style={styles.description}>{description}</Text>
 
-        {/* Botões lado a lado */}
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.buyButton} onPress={openModal}>
-            <Text style={styles.buyButtonText}>🛒 Comprar Agora</Text>
+          <TouchableOpacity style={styles.buyButton} onPress={handleAddToCart}>
+            <Text style={styles.buyButtonText}>🛒 Adicionar ao Carrinho</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
@@ -123,54 +118,9 @@ const ProductDetails = () => {
         <Modalize ref={modalizeRef} adjustToContentHeight>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Informações de Compra</Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Nome Completo"
-              placeholderTextColor="#888"
-              value={userName}
-              onChangeText={setUserName}
-            />
-            
-            <TextInput
-              style={styles.input}
-              placeholder="CPF"
-              placeholderTextColor="#888"
-              value={userCpf}
-              onChangeText={setUserCpf}
-              keyboardType="numeric"
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="CEP"
-              placeholderTextColor="#888"
-              value={userCep}
-              onChangeText={setUserCep}
-              keyboardType="numeric"
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="E-mail"
-              placeholderTextColor="#888"
-              value={userEmail}
-              onChangeText={setUserEmail}
-              keyboardType="email-address"
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Telefone"
-              placeholderTextColor="#888"
-              value={userPhone}
-              onChangeText={setUserPhone}
-              keyboardType="phone-pad"
-            />
-
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitButtonText}>Finalizar Compra</Text>
-            </TouchableOpacity>
+            <Text style={{ textAlign: 'center', marginTop: 20 }}>
+              Esta opção foi movida para a tela de carrinho. Adicione produtos e finalize por lá. 🛍️
+            </Text>
           </View>
         </Modalize>
       </View>
@@ -237,34 +187,38 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 20,
-    width: '100%',
+    gap: 12,
   },
   buyButton: {
     flex: 1,
     backgroundColor: '#4B0082',
-    paddingVertical: 12,
-    borderRadius: 8,
+    paddingVertical: 10,
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   buyButtonText: {
     color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   shareButton: {
     flex: 1,
-    backgroundColor: '#6A0DAD',
-    paddingVertical: 12,
-    borderRadius: 8,
+    backgroundColor: '#4B0082',
+    paddingVertical: 20,
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   shareButtonText: {
     color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   modalContainer: {
     padding: 20,
@@ -277,28 +231,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#4B0082',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 15,
-    paddingLeft: 10,
-    color: '#333',
-  },
-  submitButton: {
-    marginTop: 20,
-    backgroundColor: '#4B0082',
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    borderRadius: 8,
-  },
-  submitButtonText: {
-    color: '#FFF',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
 
