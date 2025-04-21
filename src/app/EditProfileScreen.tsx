@@ -1,12 +1,58 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
+import * as ImagePicker from 'expo-image-picker';
 
 const EditProfileScreen: React.FC = () => {
   const router = useRouter();
+  const [imageUri, setImageUri] = useState<string | null>(null);
+
+  // 🔒 Pedir permissão ao abrir a tela
+  useEffect(() => {
+    (async () => {
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+      const mediaStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (
+        cameraStatus.status !== 'granted' ||
+        mediaStatus.status !== 'granted'
+      ) {
+        Alert.alert('Permissão necessária', 'Acesse as configurações para permitir câmera e galeria.');
+      }
+    })();
+  }, []);
+
+  const pickFromCamera = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
+
+  const pickFromGallery = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required('Nome é obrigatório'),
@@ -22,7 +68,7 @@ const EditProfileScreen: React.FC = () => {
   const handleSave = async (values: { username: string; email: string }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
-    router.replace('/ProfileScreen'); // Navegar de volta para a tela de Perfil
+    router.replace('/ProfileScreen');
   };
 
   return (
@@ -31,8 +77,30 @@ const EditProfileScreen: React.FC = () => {
         <Icon name='arrow-back' type='material' color='#FFF' />
         <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
+
       <Text style={styles.title}>Editar Perfil</Text>
-      
+
+      {/* Foto de perfil */}
+      {imageUri ? (
+        <Image source={{ uri: imageUri }} style={styles.image} />
+      ) : (
+        <View style={styles.placeholder}>
+          <Icon name="camera-alt" type="material" color="#888" size={30} />
+          <Text style={{ color: '#888' }}>Foto do perfil</Text>
+        </View>
+      )}
+
+      {/* Botões de câmera e galeria */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={styles.smallButton} onPress={pickFromCamera}>
+          <Text style={styles.smallButtonText}>Abrir Câmera</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.smallButton} onPress={pickFromGallery}>
+          <Text style={styles.smallButtonText}>Galeria</Text>
+        </TouchableOpacity>
+      </View>
+
       <Formik
         initialValues={{ username: '', email: '' }}
         validationSchema={validationSchema}
@@ -60,7 +128,7 @@ const EditProfileScreen: React.FC = () => {
               containerStyle={styles.inputWrapper}
             />
             {touched.username && errors.username && <Text style={styles.error}>{errors.username}</Text>}
-            
+
             <Input
               placeholder="Email"
               placeholderTextColor="#888"
@@ -74,7 +142,7 @@ const EditProfileScreen: React.FC = () => {
               containerStyle={styles.inputWrapper}
             />
             {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
-            
+
             <TouchableOpacity style={styles.button} onPress={handleSubmit as any} disabled={isSubmitting}>
               <Text style={styles.buttonText}>Salvar</Text>
             </TouchableOpacity>
@@ -110,6 +178,44 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
     color: '#FFFFFF',
+  },
+  placeholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: '#888',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    backgroundColor: '#FFF',
+  },
+  image: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#4B0082',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 16,
+    gap: 10,
+  },
+  smallButton: {
+    flex: 1,
+    backgroundColor: '#4B0082',
+    borderRadius: 20,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  
+  smallButtonText: {
+    color: '#FFF',
+    fontSize: 14,
   },
   formContainer: {
     width: '100%',

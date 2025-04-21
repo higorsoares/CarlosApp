@@ -1,15 +1,5 @@
 import React, { useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Alert,
-  Share,
-  ToastAndroid,
-  Platform,
-} from 'react-native';
+import {View,Text,StyleSheet,Image,TouchableOpacity,Alert,Share,ToastAndroid,Platform} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
