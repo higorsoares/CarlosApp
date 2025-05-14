@@ -17,7 +17,6 @@ const EditProfileScreen: React.FC = () => {
   const router = useRouter();
   const [imageUri, setImageUri] = useState<string | null>(null);
 
-  // 🔒 Pedir permissão ao abrir a tela
   useEffect(() => {
     (async () => {
       const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
@@ -73,14 +72,14 @@ const EditProfileScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      {/* Botão Voltar estilizado */}
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Icon name='arrow-back' type='material' color='#FFF' />
+        <Icon name='arrow-back' type='material' color='#FFF' style={{ marginRight: 6 }} />
         <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
 
       <Text style={styles.title}>Editar Perfil</Text>
 
-      {/* Foto de perfil */}
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.image} />
       ) : (
@@ -90,7 +89,6 @@ const EditProfileScreen: React.FC = () => {
         </View>
       )}
 
-      {/* Botões de câmera e galeria */}
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.smallButton} onPress={pickFromCamera}>
           <Text style={styles.smallButtonText}>Abrir Câmera</Text>
@@ -167,11 +165,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     left: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: '#4B0082',
+    borderRadius: 8,
+    zIndex: 1,
   },
   backButtonText: {
     color: '#FFF',
     fontSize: 18,
-    marginLeft: 5,
+    fontWeight: '600',
   },
   title: {
     textAlign: 'center',
@@ -212,7 +215,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
   },
-  
   smallButtonText: {
     color: '#FFF',
     fontSize: 14,

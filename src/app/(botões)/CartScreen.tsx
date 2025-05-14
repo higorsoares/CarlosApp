@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Icon } from 'react-native-elements';
 
 export const options = {
   headerShown: false,
@@ -83,7 +84,8 @@ export default function CartScreen() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backText}>⬅ Voltar</Text>
+          <Icon name='arrow-back' type='material' color='#FFF' />
+          <Text style={styles.backText}>Voltar</Text>
         </TouchableOpacity>
 
         <Text style={styles.title}>🛒 Carrinho</Text>
@@ -109,7 +111,10 @@ export default function CartScreen() {
             <Text style={styles.total}>Total: R$ {total.toFixed(2)}</Text>
 
             <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.buyButton} onPress={openModal}>
+              <TouchableOpacity
+                style={[styles.buyButton, { backgroundColor: 'green' }]}
+                onPress={openModal}
+              >
                 <Text style={styles.buyButtonText}>🛍️ Finalizar Compra</Text>
               </TouchableOpacity>
 
@@ -157,7 +162,7 @@ export default function CartScreen() {
                 />
 
                 <TouchableOpacity
-                  style={[styles.buyButton, { marginTop: 15 }]}
+                  style={[styles.buyButton, { backgroundColor: 'green', marginTop: 15 }]}
                   onPress={handleConfirmPurchase}
                 >
                   <Text style={styles.buyButtonText}>✅ Confirmar Compra</Text>
@@ -178,6 +183,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#4B0082',
     padding: 10,
     borderRadius: 8,
@@ -187,6 +194,7 @@ const styles = StyleSheet.create({
   backText: {
     color: '#fff',
     fontSize: 16,
+    marginLeft: 5,
   },
   title: {
     fontSize: 24,
@@ -238,7 +246,6 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     flex: 1,
-    backgroundColor: '#4B0082',
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: 'center',

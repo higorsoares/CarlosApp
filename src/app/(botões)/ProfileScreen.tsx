@@ -3,29 +3,27 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
 
-
 const userProfileImage = require('../../../assets/profile/perfil.png');
-
 
 const ProfileScreen: React.FC = () => {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/HomeScreen')}>
-          <Icon name='arrow-back' type='material' color='#FFF' />
-          <Text style={styles.backButtonText}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/HomeScreen')}>
+        <Icon name="arrow-back" type="material" color="#FFF" style={{ marginRight: 6 }} />
+        <Text style={styles.backButtonText}>Voltar</Text>
+      </TouchableOpacity>
+
       <View style={styles.profileContainer}>
         <Image source={userProfileImage} style={styles.profileImage} />
         <Text style={styles.userName}>Nome do Usuário</Text>
         <Text style={styles.userEmail}>usuario@example.com</Text>
       </View>
+
       <TouchableOpacity style={styles.editButton} onPress={() => router.push('/EditProfileScreen')}>
         <Text style={styles.editButtonText}>Editar Perfil</Text>
-        <Icon name='edit' type='material' color='#FFF' />
+        <Icon name="edit" type="material" color="#FFF" />
       </TouchableOpacity>
     </View>
   );
@@ -39,28 +37,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    position: 'absolute',
-    top: 40,
-    left: 20,
-    right: 20,
-    zIndex: 1,
-  },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: '#4B0082',
+    borderRadius: 8,
+    zIndex: 1,
   },
   backButtonText: {
     color: '#FFF',
-    fontSize: 18,
-    marginLeft: 5,
+    fontSize: 16,
+    fontWeight: '600',
   },
   profileContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 80,
   },
   profileImage: {
     width: 150,
@@ -86,6 +83,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     flexDirection: 'row',
+    marginTop: 30,
   },
   editButtonText: {
     color: '#FFF',
