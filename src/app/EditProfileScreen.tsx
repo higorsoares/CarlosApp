@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert,
-  Image,
-} from 'react-native';
+import {StyleSheet,Text,View,TouchableOpacity,Alert,Image,} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
 
 const EditProfileScreen: React.FC = () => {
   const router = useRouter();
@@ -64,11 +59,26 @@ const EditProfileScreen: React.FC = () => {
       .required('Email é obrigatório'),
   });
 
-  const handleSave = async (values: { username: string; email: string }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+const handleSave = async (values: { username: string; email: string }) => {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error('Usuário não autenticado');
+
+    const userData = {
+      nome: values.username,
+      email: values.email,
+      fotoUrl: imageUri || null,
+    };
+
+    await setDoc(doc(db, 'usuarios', uid), userData, { merge: true });
+
     Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
     router.replace('/ProfileScreen');
-  };
+  } catch (err) {
+    console.error('Erro ao salvar perfil:', err);
+    Alert.alert('Erro', 'Não foi possível salvar as alterações.');
+  }
+};
 
   return (
     <View style={styles.container}>

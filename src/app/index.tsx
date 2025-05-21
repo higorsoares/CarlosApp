@@ -4,6 +4,8 @@ import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase'; // ajuste o caminho se necessário
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -14,12 +16,12 @@ const Login: React.FC = () => {
   });
 
   const handleLogin = async (values: { email: string; password: string }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    if (values.email.trim() === 'teste@teste.com' && values.password.trim() === '123456') {
-     
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
       router.push('/HomeScreen'); // Navegar para a tela Home
-    } else {
-      Alert.alert('Erro', 'Email ou senha incorreto');
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert('Erro', 'Email ou senha incorretos');
     }
   };
 

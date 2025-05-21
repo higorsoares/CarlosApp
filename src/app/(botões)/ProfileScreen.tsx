@@ -1,12 +1,38 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
+import { auth, db } from '../../config/firebase'; // ajuste se necessário
+import { doc, getDoc } from 'firebase/firestore';
 
 const userProfileImage = require('../../../assets/profile/perfil.png');
 
 const ProfileScreen: React.FC = () => {
   const router = useRouter();
+  const [userData, setUserData] = useState<{ nome?: string, email?: string, fotoUrl?: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+
+    const fetchData = async () => {
+      const docRef = doc(db, 'usuarios', uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setUserData(docSnap.data() as any);
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#FFF" style={{ flex: 1 }} />;
+  }
 
   return (
     <View style={styles.container}>
@@ -16,9 +42,12 @@ const ProfileScreen: React.FC = () => {
       </TouchableOpacity>
 
       <View style={styles.profileContainer}>
-        <Image source={userProfileImage} style={styles.profileImage} />
-        <Text style={styles.userName}>Nome do Usuário</Text>
-        <Text style={styles.userEmail}>usuario@example.com</Text>
+        <Image
+          source={userData?.fotoUrl ? { uri: userData.fotoUrl } : userProfileImage}
+          style={styles.profileImage}
+        />
+        <Text style={styles.userName}>{userData?.nome || 'Nome não definido'}</Text>
+        <Text style={styles.userEmail}>{userData?.email || 'Email não disponível'}</Text>
       </View>
 
       <TouchableOpacity style={styles.editButton} onPress={() => router.push('/EditProfileScreen')}>
@@ -28,6 +57,7 @@ const ProfileScreen: React.FC = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

@@ -5,6 +5,11 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
 import Toast from 'react-native-toast-message';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../config/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+
+
 
 const RegisterScreen: React.FC = () => {
   const router = useRouter();
@@ -17,8 +22,16 @@ const RegisterScreen: React.FC = () => {
   });
 
   const handleRegister = async (values: { email: string; password: string }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Cadastrar:', values.email, values.password);
+  try {
+    // Cria usuário no Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+    const user = userCredential.user;
+
+    // Cria documento do usuário no Firestore
+    await setDoc(doc(db, 'usuarios', user.uid), {
+      email: values.email,
+      criadoEm: new Date()
+    });
 
     Toast.show({
       type: 'success',
@@ -28,11 +41,22 @@ const RegisterScreen: React.FC = () => {
       visibilityTime: 3000,
       autoHide: true,
     });
+
     setTimeout(() => {
       router.push('/');
     }, 3500);
-
-  };
+  } catch (error: any) {
+    console.error("Erro no cadastro:", error);
+    Toast.show({
+      type: 'error',
+      text1: 'Erro ao cadastrar',
+      text2: error.message || 'Tente novamente.',
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+    });
+  }
+};
 
   return (
     <View style={styles.container}>
