@@ -1,70 +1,78 @@
-import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
 
-const cocaImage = require('../../../assets/img/coca.png');
-const salgadoImage = require('../../../assets/img/cheetos.png');
-const foneImage = require('../../../assets/img/fone.png');
-const watchImage = require('../../../assets/img/smartwatch.png'); // nova imagem
-
-const products = [
-  {
-    id: '1',
-    name: 'Coca-Cola',
-    price: 'R$ 10,00',
-    description: 'Coca-Cola 1L – Refrescância na medida certa!',
-    image: cocaImage,
-  },
-  {
-    id: '2',
-    name: 'Cheetos',
-    price: 'R$ 14,00',
-    description: 'Salgadinho Cheetos 160g – Crocância e sabor que viciam!',
-    image: salgadoImage,
-  },
-  {
-    id: '3',
-    name: 'Xtrad Anti Ruído',
-    price: 'R$ 70,00',
-    description: 'Fone de Ouvido Sem Fio Xtrad Anti Ruído – Imersão total no seu som!',
-    image: foneImage,
-  },
-  {
-    id: '4',
-    name: 'Smartwatch FitBand',
-    price: 'R$ 150,00',
-    description: 'Smartwatch com monitoramento de saúde, passos, sono e mais!',
-    image: watchImage,
-  },
-];
+import { db } from '../../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const screenWidth = Dimensions.get('window').width;
 
 const HomeScreen = () => {
   const router = useRouter();
+  const [produtos, setProdutos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'produtos'));
+        const produtosArray = [];
+        querySnapshot.forEach((doc) => {
+          produtosArray.push({ id: doc.id, ...doc.data() });
+        });
+        setProdutos(produtosArray);
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProdutos();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#4B0082" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerButton} onPress={() => {
-          router.dismissAll();
-          router.replace('/');
-        }}>
-          <Icon name='arrow-back' type='material' color='#FFF' />
+        <TouchableOpacity
+          style={styles.headerButton}
+          onPress={() => {
+            router.dismissAll();
+            router.replace('/');
+          }}
+        >
+          <Icon name="arrow-back" type="material" color="#FFF" />
           <Text style={styles.buttonText}>Sair</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.headerButton} onPress={() => router.push('/ProfileScreen')}>
           <Text style={styles.buttonText}>Perfil</Text>
-          <Icon name='account-circle' type='material' color='#FFF' />
+          <Icon name="account-circle" type="material" color="#FFF" />
         </TouchableOpacity>
       </View>
 
       <Text style={styles.title}>Produtos em Destaque</Text>
 
       <FlatList
-        data={products}
+        data={produtos}
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.row}
@@ -75,17 +83,18 @@ const HomeScreen = () => {
               router.push({
                 pathname: '/ProductDetails',
                 params: {
+                  id: item.id,
                   name: item.name,
                   price: item.price,
                   description: item.description,
-                  image: Image.resolveAssetSource(item.image).uri,
+                  image: item.image,
                 },
               })
             }
           >
-            <Image source={item.image} style={styles.productImage} />
+            <Image source={{ uri: item.image }} style={styles.productImage} />
             <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>{item.price}</Text>
+            <Text style={styles.productPrice}>R$ {item.price}</Text>
           </TouchableOpacity>
         )}
       />
@@ -115,9 +124,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    backgroundColor: '#4B0082', // mesma cor dos cards
+    backgroundColor: '#4B0082',
   },
-  
   buttonText: {
     color: '#FFF',
     fontSize: 16,
@@ -127,7 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 20, // espaçamento ajustado
+    marginVertical: 20,
     color: '#FFF',
   },
   row: {
@@ -138,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4B0082',
     borderRadius: 10,
     padding: 10,
-    width: (screenWidth / 2) - 20,
+    width: screenWidth / 2 - 20,
     alignItems: 'center',
   },
   productImage: {
