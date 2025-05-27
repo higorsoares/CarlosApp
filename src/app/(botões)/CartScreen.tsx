@@ -112,10 +112,10 @@ export default function CartScreen() {
 
             <View style={styles.buttonRow}>
               <TouchableOpacity
-                style={[styles.buyButton, { backgroundColor: 'green' }]}
+                style={[styles.buyButton, { backgroundColor: '#003A84' }]}
                 onPress={openModal}
               >
-                <Text style={styles.buyButtonText}>🛍️ Finalizar Compra</Text>
+                <Text style={styles.buyButtonText}>Finalizar Compra</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -131,7 +131,7 @@ export default function CartScreen() {
                   )
                 }
               >
-                <Text style={styles.buyButtonText}>🗑️ Limpar</Text>
+                <Text style={styles.buyButtonText}>Limpar</Text>
               </TouchableOpacity>
             </View>
 
@@ -162,10 +162,10 @@ export default function CartScreen() {
                 />
 
                 <TouchableOpacity
-                  style={[styles.buyButton, { backgroundColor: 'green', marginTop: 15 }]}
+                  style={[styles.buyButton, { backgroundColor: '#003A84', marginTop: 15 }]}
                   onPress={handleConfirmPurchase}
                 >
-                  <Text style={styles.buyButtonText}>✅ Confirmar Compra</Text>
+                  <Text style={styles.buyButtonText}>Confirmar Compra</Text>
                 </TouchableOpacity>
               </View>
             </Modalize>
@@ -176,16 +176,17 @@ export default function CartScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090033',
+    backgroundColor: '#F5F7FA',
     padding: 20,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4B0082',
+    backgroundColor: '#003A84',
     padding: 10,
     borderRadius: 8,
     marginBottom: 15,
@@ -198,13 +199,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: '#FFF',
+    color: '#0B1F3A',
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 15,
   },
   empty: {
-    color: '#FFF',
+    color: '#9E9E9E',
     textAlign: 'center',
     fontSize: 16,
     marginTop: 30,
@@ -212,10 +213,15 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a004d',
+    backgroundColor: '#FFFFFF',
     padding: 10,
     borderRadius: 10,
     marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   image: {
     width: 60,
@@ -226,18 +232,18 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FFF',
+    color: '#0B1F3A',
   },
   price: {
     fontSize: 14,
-    color: '#CCC',
+    color: '#4B0082',
   },
   total: {
     marginTop: 15,
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'right',
-    color: '#FFF',
+    color: '#0B1F3A',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -265,7 +271,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#4B0082',
+    color: '#003A84',
     textAlign: 'center',
     marginBottom: 20,
   },

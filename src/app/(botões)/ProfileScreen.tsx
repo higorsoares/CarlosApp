@@ -1,15 +1,16 @@
+// ProfileScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
-import { auth, db } from '../../config/firebase'; // ajuste se necessário
+import { auth, db } from '../../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 const userProfileImage = require('../../../assets/profile/perfil.png');
 
 const ProfileScreen: React.FC = () => {
   const router = useRouter();
-  const [userData, setUserData] = useState<{ nome?: string, email?: string, fotoUrl?: string } | null>(null);
+  const [userData, setUserData] = useState<{ nome?: string; email?: string; fotoUrl?: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,14 +32,18 @@ const ProfileScreen: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#FFF" style={{ flex: 1 }} />;
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#0B1F3A" />
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/HomeScreen')}>
-        <Icon name="arrow-back" type="material" color="#FFF" style={{ marginRight: 6 }} />
-        <Text style={styles.backButtonText}>Voltar</Text>
+        <Icon name="arrow-back" type="material" color="#FFFFFF" style={{ marginRight: 6 }} />
+        
       </TouchableOpacity>
 
       <View style={styles.profileContainer}>
@@ -52,73 +57,80 @@ const ProfileScreen: React.FC = () => {
 
       <TouchableOpacity style={styles.editButton} onPress={() => router.push('/EditProfileScreen')}>
         <Text style={styles.editButtonText}>Editar Perfil</Text>
-        <Icon name="edit" type="material" color="#FFF" />
+        <Icon name="edit" type="material" color="#FFFFFF" />
       </TouchableOpacity>
     </View>
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090033',
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#F5F7FA',
+    paddingTop: 80,
+    paddingHorizontal: 20,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
     top: 40,
-    left: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    backgroundColor: '#4B0082',
-    borderRadius: 8,
+    left: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#003A84',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
     zIndex: 1,
   },
   backButtonText: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
+    marginLeft: 5,
   },
   profileContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 80,
+    marginTop: 60,
   },
   profileImage: {
     width: 150,
     height: 150,
     borderRadius: 75,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
   },
   userName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFF',
-    marginBottom: 10,
+    color: '#0B1F3A',
+    marginBottom: 8,
   },
   userEmail: {
-    fontSize: 18,
-    color: '#DDD',
-    marginBottom: 20,
+    fontSize: 16,
+    color: '#365486',
+    textAlign: 'center',
   },
   editButton: {
-    backgroundColor: '#4B0082',
-    borderRadius: 25,
-    paddingVertical: 10,
+    flexDirection: 'row',
+    backgroundColor: '#003A84',
+    borderRadius: 10,
+    paddingVertical: 12,
     paddingHorizontal: 20,
     alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 30,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    marginTop: 40,
   },
   editButtonText: {
-    color: '#FFF',
-    fontSize: 18,
-    marginRight: 5,
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    marginRight: 8,
   },
 });
 

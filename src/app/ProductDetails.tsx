@@ -1,3 +1,4 @@
+// ProductDetails.tsx
 import React, { useRef } from 'react';
 import {
   View,
@@ -44,7 +45,7 @@ const ProductDetails = () => {
           style={styles.backButton}
           onPress={() => router.replace('/HomeScreen')}
         >
-          <Icon name="arrow-back" type="material" color="#FFF" style={{ marginRight: 6 }} />
+          <Icon name="arrow-back" type="material" color="#0B1F3A" />
           <Text style={styles.backText}>Voltar</Text>
         </TouchableOpacity>
       </View>
@@ -84,8 +85,8 @@ const ProductDetails = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Icon name="arrow-back" type="material" color="#FFF" style={{ marginRight: 6 }} />
-          <Text style={styles.backText}>Voltar</Text>
+          <Icon name="arrow-back" type="material" color="#FFFFFF" />
+
         </TouchableOpacity>
 
         <ScrollView
@@ -99,7 +100,7 @@ const ProductDetails = () => {
           </View>
 
           <View style={styles.priceBox}>
-            <Text style={styles.price}>{price}</Text>
+            <Text style={styles.price}>R$ {price}</Text>
           </View>
 
           <View style={styles.descriptionBox}>
@@ -109,11 +110,11 @@ const ProductDetails = () => {
 
           <View style={styles.buttonRow}>
             <TouchableOpacity style={styles.buyButton} onPress={handleAddToCart}>
-              <Text style={styles.buyButtonText}>🛒 Adicionar ao Carrinho</Text>
+              <Text style={styles.buyButtonText}>Adicionar ao Carrinho</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
-              <Text style={styles.shareButtonText}>📤 Compartilhar</Text>
+              <Text style={styles.shareButtonText}> Compartilhar</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -134,17 +135,15 @@ const ProductDetails = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090033',
-    padding: 20,
-    alignItems: 'center',
+    backgroundColor: '#F5F7FA',
+    paddingTop: 80,
+    paddingHorizontal: 16,
   },
   scrollContent: {
     paddingBottom: 40,
-    alignItems: 'center',
-    width: '100%',
   },
   errorText: {
-    color: '#FFF',
+    color: '#0B1F3A',
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 20,
@@ -153,132 +152,120 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    top: 20,
-    left: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    backgroundColor: '#4B0082',
-    borderRadius: 8,
+    top: 40,
+    left: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#003A84',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
     zIndex: 1,
   },
   backText: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    marginLeft: 5,
+    fontWeight: '500',
   },
   name: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFF',
-    marginTop: 60,
-    marginBottom: 15,
+    color: '#0B1F3A',
     textAlign: 'center',
+    marginBottom: 20,
   },
   imageBox: {
-    width: 220,
-    height: 220,
-    borderRadius: 15,
-    borderWidth: 2,
-    borderColor: '#4B0082',
-    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
-    backgroundColor: '#120048',
+    justifyContent: 'center',
+    marginBottom: 20,
   },
   image: {
     width: 200,
     height: 200,
-    borderRadius: 10,
-    resizeMode: 'contain', // <- adicione esta linha aqui
+    resizeMode: 'contain',
+    borderRadius: 12,
   },
-
-priceBox: {
-  width: 220,
-  height:50,
-  backgroundColor: '#120048',
-  paddingVertical: 12,
-  borderRadius: 15,
-  borderWidth: 2,
-  borderColor: '#4B0082',
-  marginBottom: 20,
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-
+  priceBox: {
+    backgroundColor: '#FFFFFF',
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   price: {
     fontSize: 20,
-    color: '#DDD',
+    color: '#0B1F3A',
+    fontWeight: '600',
   },
   descriptionBox: {
-    width: '100%',
-    backgroundColor: '#120048',
-    padding: 15,
-    borderRadius: 15,
-    borderWidth: 2,
-    borderColor: '#4B0082',
+    backgroundColor: '#FFFFFF',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
     marginBottom: 20,
   },
   descriptionTitle: {
     fontSize: 18,
-    color: '#FFF',
+    color: '#0B1F3A',
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
   },
   description: {
     fontSize: 16,
-    color: '#FFF',
+    color: '#1C1C1E',
     textAlign: 'center',
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    gap: 12,
+    justifyContent: 'space-between',
+    gap: 10,
   },
   buyButton: {
-    width: 160,
-    height: 62,
-    backgroundColor: '#4B0082',
-    paddingVertical: 14,
+    flex: 1,
+    backgroundColor: '#003A84',
     borderRadius: 10,
+    paddingVertical: 14,
     alignItems: 'center',
-    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
   },
   buyButtonText: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '600',
-    textAlign: 'center',
   },
   shareButton: {
-    width: 160,
-    height: 62,
-    backgroundColor: '#4B0082',
-    paddingVertical: 14,
+    flex: 1,
+    backgroundColor: '#003A84',
     borderRadius: 10,
+    paddingVertical: 14,
     alignItems: 'center',
-    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
   },
   shareButtonText: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '600',
-    textAlign: 'center',
   },
   modalContainer: {
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   modalTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#4B0082',
+    color: '#0B1F3A',
   },
 });
+
 
 export default ProductDetails;

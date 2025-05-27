@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-elements';
-
 import { db } from '../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
@@ -44,7 +43,7 @@ const HomeScreen = () => {
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#4B0082" />
+        <ActivityIndicator size="large" color="#0B1F3A" />
       </View>
     );
   }
@@ -59,13 +58,13 @@ const HomeScreen = () => {
             router.replace('/');
           }}
         >
-          <Icon name="arrow-back" type="material" color="#FFF" />
-          <Text style={styles.buttonText}>Sair</Text>
+          <Icon name="arrow-back" type="material" color="#FFFFFF" />
+          
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.headerButton} onPress={() => router.push('/ProfileScreen')}>
-          <Text style={styles.buttonText}>Perfil</Text>
-          <Icon name="account-circle" type="material" color="#FFF" />
+          <Text style={styles.headerButtonText}>Perfil</Text>
+          <Icon name="account-circle" type="material" color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
@@ -105,49 +104,57 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090033',
+    backgroundColor: '#F5F7FA',
     paddingTop: 80,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'absolute',
     top: 40,
-    left: 20,
-    right: 20,
+    left: 16,
+    right: 16,
     zIndex: 1,
   },
   headerButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 10,
+    backgroundColor: '#003A84',
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: '#4B0082',
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
   },
-  buttonText: {
-    color: '#FFF',
+  headerButtonText: {
+    color: '#FFFFFF',
     fontSize: 16,
     marginHorizontal: 5,
+    fontWeight: '500',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#0B1F3A',
     textAlign: 'center',
     marginVertical: 20,
-    color: '#FFF',
   },
   row: {
     justifyContent: 'space-between',
     marginBottom: 20,
   },
   productContainer: {
-    backgroundColor: '#4B0082',
-    borderRadius: 10,
-    padding: 10,
-    width: screenWidth / 2 - 20,
+    backgroundColor: '#003A84',
+    borderRadius: 16,
+    padding: 12,
+    width: screenWidth / 2 - 24,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
   },
   productImage: {
     width: 100,
@@ -164,7 +171,8 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: 14,
-    color: '#DDD',
+    color: '#FFFFFF',
+    marginTop: 4,
   },
 });
 

@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Icon } from 'react-native-elements';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase'; // ajuste o caminho se necessário
+import { auth } from '../config/firebase';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -18,7 +18,7 @@ const Login: React.FC = () => {
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
-      router.push('/HomeScreen'); // Navegar para a tela Home
+      router.push('/HomeScreen');
     } catch (error: any) {
       console.error(error);
       Alert.alert('Erro', 'Email ou senha incorretos');
@@ -27,8 +27,6 @@ const Login: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
@@ -46,13 +44,13 @@ const Login: React.FC = () => {
           <View style={styles.formContainer}>
             <Input
               placeholder="Email"
-              placeholderTextColor="#888"
+              placeholderTextColor="#8E8E93"
               keyboardType="email-address"
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
-              leftIcon={<Icon name='email' type='material' color='#888' />}
-              inputStyle={{ color: '#000' }}
+              leftIcon={<Icon name='email' type='material' color='#365486' />}
+              inputStyle={{ color: '#1C1C1E' }}
               inputContainerStyle={styles.inputContainer}
               containerStyle={styles.inputWrapper}
             />
@@ -60,20 +58,20 @@ const Login: React.FC = () => {
 
             <Input
               placeholder="Senha"
-              placeholderTextColor="#888"
+              placeholderTextColor="#8E8E93"
               secureTextEntry
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.password}
-              leftIcon={<Icon name='lock' type='material' color='#888' />}
-              inputStyle={{ color: '#000' }}
+              leftIcon={<Icon name='lock' type='material' color='#365486' />}
+              inputStyle={{ color: '#1C1C1E' }}
               inputContainerStyle={styles.inputContainer}
               containerStyle={styles.inputWrapper}
             />
             {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit as any} disabled={isSubmitting}>
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>Entar</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -92,16 +90,10 @@ const Login: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090033',
+    backgroundColor: '#F5F7FA',
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    marginBottom: 16,
-    color: '#FFFFFF',
   },
   formContainer: {
     width: '100%',
@@ -112,10 +104,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     marginVertical: 8,
-    backgroundColor: '#FFF',
+    backgroundColor: '#FFFFFF',
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: '#D9D9D9',
     paddingLeft: 10,
     paddingRight: 10,
     marginBottom: 12,
@@ -124,19 +116,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   error: {
-    color: 'red',
+    color: '#FF3B30',
     marginBottom: 8,
   },
   button: {
-    backgroundColor: '#4B0082',
+    backgroundColor: '#003A84',
     borderRadius: 25,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 12,
     alignItems: 'center',
+    marginTop: 10,
+    width: '100%',
   },
   buttonText: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontSize: 18,
+    fontWeight: '600',
   },
   registerContainer: {
     alignItems: 'center',
@@ -144,14 +138,15 @@ const styles = StyleSheet.create({
   },
   registerText: {
     textAlign: 'center',
-    fontSize: 20,
-    color: 'white',
+    fontSize: 16,
+    color: '#8E8E93',
   },
   registerLink: {
     textAlign: 'center',
-    fontSize: 20,
-    color: 'white',
+    fontSize: 16,
+    color: '#0B1F3A',
     textDecorationLine: 'underline',
+    marginTop: 4,
   },
 });
 

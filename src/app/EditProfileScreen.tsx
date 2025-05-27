@@ -1,5 +1,13 @@
+// EditProfileScreen.tsx
 import React, { useEffect, useState } from 'react';
-import {StyleSheet,Text,View,TouchableOpacity,Alert,Image,} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -59,33 +67,32 @@ const EditProfileScreen: React.FC = () => {
       .required('Email é obrigatório'),
   });
 
-const handleSave = async (values: { username: string; email: string }) => {
-  try {
-    const uid = auth.currentUser?.uid;
-    if (!uid) throw new Error('Usuário não autenticado');
+  const handleSave = async (values: { username: string; email: string }) => {
+    try {
+      const uid = auth.currentUser?.uid;
+      if (!uid) throw new Error('Usuário não autenticado');
 
-    const userData = {
-      nome: values.username,
-      email: values.email,
-      fotoUrl: imageUri || null,
-    };
+      const userData = {
+        nome: values.username,
+        email: values.email,
+        fotoUrl: imageUri || null,
+      };
 
-    await setDoc(doc(db, 'usuarios', uid), userData, { merge: true });
+      await setDoc(doc(db, 'usuarios', uid), userData, { merge: true });
 
-    Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
-    router.replace('/ProfileScreen');
-  } catch (err) {
-    console.error('Erro ao salvar perfil:', err);
-    Alert.alert('Erro', 'Não foi possível salvar as alterações.');
-  }
-};
+      Alert.alert('Sucesso', 'Perfil atualizado com sucesso');
+      router.replace('/ProfileScreen');
+    } catch (err) {
+      console.error('Erro ao salvar perfil:', err);
+      Alert.alert('Erro', 'Não foi possível salvar as alterações.');
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Botão Voltar estilizado */}
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Icon name='arrow-back' type='material' color='#FFF' style={{ marginRight: 6 }} />
-        <Text style={styles.backButtonText}>Voltar</Text>
+        <Icon name="arrow-back" type="material" color="#FFF" />
+      
       </TouchableOpacity>
 
       <Text style={styles.title}>Editar Perfil</Text>
@@ -130,11 +137,12 @@ const handleSave = async (values: { username: string; email: string }) => {
               onChangeText={handleChange('username')}
               onBlur={handleBlur('username')}
               value={values.username}
-              leftIcon={<Icon name='person' type='material' color='#888' />}
-              inputStyle={{ color: '#000' }}
-              inputContainerStyle={styles.inputContainer}
-              containerStyle={styles.inputWrapper}
+              leftIcon={<Icon name="person" type="material" color="#888" />}
+              inputStyle={{ color: '#0B1F3A', fontSize: 14 }}
+              inputContainerStyle={{ height: 40, borderBottomWidth: 0 }} // <-- altura reduzida do campo
+              containerStyle={[styles.inputWrapper, { height: 50 }]}      // <-- altura total controlada
             />
+
             {touched.username && errors.username && <Text style={styles.error}>{errors.username}</Text>}
 
             <Input
@@ -144,11 +152,12 @@ const handleSave = async (values: { username: string; email: string }) => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
-              leftIcon={<Icon name='email' type='material' color='#888' />}
-              inputStyle={{ color: '#000' }}
-              inputContainerStyle={styles.inputContainer}
-              containerStyle={styles.inputWrapper}
+              leftIcon={<Icon name="email" type="material" color="#888" />}
+              inputStyle={{ color: '#0B1F3A', fontSize: 14 }}
+              inputContainerStyle={{ height: 40, borderBottomWidth: 0 }}
+              containerStyle={[styles.inputWrapper, { height: 50 }]}
             />
+
             {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit as any} disabled={isSubmitting}>
@@ -164,10 +173,9 @@ const handleSave = async (values: { username: string; email: string }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090033',
+    backgroundColor: '#F5F7FA',
     padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingTop: 80,
   },
   backButton: {
     flexDirection: 'row',
@@ -175,33 +183,38 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     left: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    backgroundColor: '#4B0082',
-    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#003A84',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
     zIndex: 1,
   },
   backButtonText: {
-    color: '#FFF',
-    fontSize: 18,
-    fontWeight: '600',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
+    marginLeft: 6,
   },
   title: {
     textAlign: 'center',
     fontSize: 24,
     marginBottom: 16,
-    color: '#FFFFFF',
+    color: '#0B1F3A',
+    fontWeight: 'bold',
   },
   placeholder: {
     width: 120,
     height: 120,
     borderRadius: 60,
     borderWidth: 2,
-    borderColor: '#888',
+    borderColor: '#D9D9D9',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'center',
   },
   image: {
     width: 120,
@@ -209,26 +222,31 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     marginBottom: 16,
     borderWidth: 2,
-    borderColor: '#4B0082',
+    borderColor: '#D9D9D9',
+    alignSelf: 'center',
   },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 16,
-    gap: 10,
-  },
-  smallButton: {
-    flex: 1,
-    backgroundColor: '#4B0082',
-    borderRadius: 20,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  smallButtonText: {
-    color: '#FFF',
-    fontSize: 14,
-  },
+ buttonRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 16,
+  
+},
+
+smallButton: {
+  flex: 1,
+  backgroundColor: '#003A84',
+  borderRadius: 20,
+  paddingVertical: 10,
+  alignItems: 'center',
+  borderWidth: 1,
+  borderColor: '#D9D9D9',
+  marginHorizontal: 5, 
+},
+
+smallButtonText: {
+  color: '#FFFFFF',
+  fontSize: 14,
+},
   formContainer: {
     width: '100%',
     justifyContent: 'center',
@@ -236,33 +254,38 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     width: '100%',
-    height: 50,
     marginVertical: 8,
-    backgroundColor: '#FFF',
+    backgroundColor: '#FFFFFF',
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: '#D9D9D9',
     paddingLeft: 10,
     paddingRight: 10,
-    marginBottom: 12,
+    marginBottom: 4,
+    
   },
   inputContainer: {
     borderBottomWidth: 0,
   },
   error: {
     color: 'red',
-    marginBottom: 8,
+    fontSize: 12,
+    alignSelf: 'flex-start',
+    marginLeft: 10,
+    marginBottom: 4,
   },
   button: {
-    backgroundColor: '#4B0082',
+    backgroundColor: '#003A84',
     borderRadius: 25,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
     alignItems: 'center',
+    marginTop: 20,
   },
   buttonText: {
     color: '#FFF',
     fontSize: 18,
+    fontWeight: '600',
   },
 });
 
