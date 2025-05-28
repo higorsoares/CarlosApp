@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -55,8 +55,14 @@ const RegisterScreen: React.FC = () => {
   };
 
   return (
+    
     <View style={styles.container}>
       
+  <Image
+          source={require('../../assets/img/logo.png')} // <-- Caminho local
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
       <Formik
         initialValues={{ email: '', password: '' }}
@@ -180,6 +186,12 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     marginTop: 4,
   },
+  logo: {
+  width: 250,
+  height: 250,
+  marginBottom: 20,
+},
+
 });
 
 export default RegisterScreen;

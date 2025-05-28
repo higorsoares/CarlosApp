@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Alert, TouchableOpacity, Image } from 'react-native'; // <-- Importou Image aqui
 import { useRouter } from 'expo-router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -27,6 +27,13 @@ const Login: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      {/* Imagem do logo */}
+      <Image
+        source={require('../../assets/img/logo.png')} // <-- Caminho local
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
@@ -71,7 +78,7 @@ const Login: React.FC = () => {
             {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit as any} disabled={isSubmitting}>
-              <Text style={styles.buttonText}>Entar</Text>
+              <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -94,6 +101,11 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  logo: {
+    width: 250,
+    height: 250,
+    marginBottom: 20,
   },
   formContainer: {
     width: '100%',
